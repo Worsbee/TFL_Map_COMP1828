@@ -1,53 +1,12 @@
-#!/usr/bin/env python3
-# dijkstra.py
-
-# Introduction to Algorithms, Fourth edition
-# Linda Xiao and Tom Cormen
-
-#########################################################################
-#                                                                       #
-# Copyright 2022 Massachusetts Institute of Technology                  #
-#                                                                       #
-# Permission is hereby granted, free of charge, to any person obtaining #
-# a copy of this software and associated documentation files (the       #
-# "Software"), to deal in the Software without restriction, including   #
-# without limitation the rights to use, copy, modify, merge, publish,   #
-# distribute, sublicense, and/or sell copies of the Software, and to    #
-# permit persons to whom the Software is furnished to do so, subject to #
-# the following conditions:                                             #
-#                                                                       #
-# The above copyright notice and this permission notice shall be        #
-# included in all copies or substantial portions of the Software.       #
-#                                                                       #
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,       #
-# EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF    #
-# MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND                 #
-# NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS   #
-# BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN    #
-# ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN     #
-# CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE      #
-# SOFTWARE.                                                             #
-#                                                                       #
-#########################################################################
-from data_load import bidirectional_edges
-from data_load import stations
-from single_source_shortest_paths import initialize_single_source, relax
-from min_heap_priority_queue import MinHeapPriorityQueue
+from data_load import bidirectional_edges   # importing nested list with all [stations, next station, time]
+from data_load import stations              # importing list of all the stations to be the vertices
+from single_source_shortest_paths import initialize_single_source, relax   # importing graph - adjacency list graph
+from min_heap_priority_queue import MinHeapPriorityQueue     # importing queue
 
 
-def dijkstra(G, s):
-    """Solve single-source shortest-paths problem with no negative-weight edges.
-
-	Arguments:
-	G -- a directed, weighted graph
-	s -- index of source vertex
-	Assumption:
-	All weights are nonnegative
-
-	Returns:
-	d -- distances from source vertex s
-	pi -- predecessors
-	"""
+def dijkstra(G, s, end):
+    # G takes in a bidirectional, weighted graph. S is the starting vertex and end is the ending vertex.
+    # This function returns d distances from the source vertex s and pi for the predecessors
 
     card_V = G.get_card_V()
 
@@ -60,7 +19,9 @@ def dijkstra(G, s):
 
     while queue.get_size() > 0:  # while the priority queue is not empty
         u = queue.extract_min()  # extract a vertex with the minimum distance
-
+        # If the end node has been reached stop the algorithm
+        if u == end:
+            break
         # Relax each edge and update d and pi.
         for edge in G.get_adj_list(u):
             v = edge.get_v()
@@ -75,24 +36,47 @@ def dijkstra(G, s):
 if __name__ == "__main__":
 
     from adjacency_list_graph import AdjacencyListGraph
-    #from bellman_ford import bellman_ford
-    #from generate_random_graph import generate_random_graph
-
-    # Textbook example.
-    #vertices = ['a', 'b', 'c', 'd', 'e']
-    #edges = [('a', 'b', 6), ('b', 'a', 6), ('a', 'c', 2), ('c', 'a', 2), ('b', 'e', 3), ('e', 'b', 3),
-     #        ('b', 'd', 8), ('d', 'b', 8), ('c', 'e', 4), ('e', 'c', 4)]
     vertices = stations
     edges = bidirectional_edges
-    starting_v = input("Enter a starting node: ")  # check if node exists
-    if starting_v in vertices:
+    # prompt user to input a starting station
+    starting_v = input("Enter the station you are starting from: ")
+    if starting_v in vertices:   # check if the station exists in the vertices list
+        pass
+    else:
+        print("This node does not exist")
+    # prompt user for a final destination
+    ending_v = input("Enter a destination station: ")
+    if ending_v in vertices:  # check if the final destination is in the vertices list
         pass
     else:
         print("This node does not exist")
     graph1 = AdjacencyListGraph(len(vertices), True, True)
     for edge in edges:
         graph1.insert_edge(vertices.index(edge[0]), vertices.index(edge[1]), edge[2])
-    d, pi = dijkstra(graph1, vertices.index(starting_v))
-    for i in range(len(vertices)):
-        print(vertices[i] + ": d = " + str(d[i]) + ", pi = " + ("None" if pi[i] is None else vertices[pi[i]]))
-    print()
+    d, pi = dijkstra(graph1, vertices.index(starting_v), vertices.index(ending_v))
+
+    # Print the distance between the starting and ending vertices
+    if d[vertices.index(ending_v)] != float('inf'):
+        print(f"Shortest distance from {starting_v} to {ending_v} is {d[vertices.index(ending_v)]} minutes")
+        #print(pi[ending_v])
+    else:
+        print(f"No path from {starting_v} to {ending_v}")
+
+
+    # Getting all the stations passed by the user by storing all of the predecessors of the ending vertex in a list
+    if d[vertices.index(ending_v)] != float('inf'):
+        print(f"Shortest distance from {starting_v} to {ending_v} is {d[vertices.index(ending_v)]} minutes")
+
+        # Backtrack from the ending vertex to the starting vertex using the "pi" array
+        path = []
+        current_vertex = vertices.index(ending_v)
+        while current_vertex != vertices.index(starting_v):
+            path.append(vertices[current_vertex])
+            current_vertex = pi[current_vertex]
+        path.append(starting_v)
+        path.reverse()
+
+        # Print the path (predecessors) from ending to starting
+        print(f"Path from {starting_v} to {ending_v}: {' -> '.join(path)}")
+    else:
+        print(f"No path from {starting_v} to {ending_v}")
