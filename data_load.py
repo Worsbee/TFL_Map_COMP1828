@@ -53,4 +53,9 @@ for edge in filtered_list_1:
     source, target, weight = edge
     bidirectional_edges.append([source, target, weight])
     bidirectional_edges.append([target, source, weight])
-    # print(bidirectional_edges)
+
+# Remove extra spaces from all the stations
+stations_1 = [station.strip() for station in stations]
+# Normalize the station names in the bidirectional_edges list
+# Remove leading and trailing spaces from station names in the bidirectional_edges list
+bidirectional_edges = [[edge[0].strip(), edge[1].strip(), edge[2]] for edge in bidirectional_edges]
