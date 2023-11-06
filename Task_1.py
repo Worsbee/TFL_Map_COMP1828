@@ -1,7 +1,7 @@
-from data_load import bidirectional_edges   # importing nested list with all [stations, next station, time]
-from data_load import stations              # importing list of all the stations to be the vertices
-from single_source_shortest_paths import initialize_single_source, relax   # importing graph - adjacency list graph
-from min_heap_priority_queue import MinHeapPriorityQueue     # importing queue
+from data_load import bidirectional_edges  # importing nested list with all [stations, next station, time]
+from data_load import stations_1  # importing list of all the stations to be the vertices
+from single_source_shortest_paths import initialize_single_source, relax  # importing graph - adjacency list graph
+from min_heap_priority_queue import MinHeapPriorityQueue  # importing queue
 
 
 def dijkstra(G, s, end):
@@ -36,11 +36,12 @@ def dijkstra(G, s, end):
 if __name__ == "__main__":
 
     from adjacency_list_graph import AdjacencyListGraph
-    vertices = stations
+
+    vertices = stations_1
     edges = bidirectional_edges
     # prompt user to input a starting station
     starting_v = input("Enter the station you are starting from: ")
-    if starting_v in vertices:   # check if the station exists in the vertices list
+    if starting_v in vertices:  # check if the station exists in the vertices list
         pass
     else:
         print("This node does not exist")
@@ -58,14 +59,11 @@ if __name__ == "__main__":
     # Print the distance between the starting and ending vertices
     if d[vertices.index(ending_v)] != float('inf'):
         print(f"Shortest distance from {starting_v} to {ending_v} is {d[vertices.index(ending_v)]} minutes")
-        #print(pi[ending_v])
     else:
         print(f"No path from {starting_v} to {ending_v}")
 
-
-    # Getting all the stations passed by the user by storing all of the predecessors of the ending vertex in a list
+    # Getting all the stations passed by the user by storing all the predecessors of the ending vertex in a list
     if d[vertices.index(ending_v)] != float('inf'):
-        print(f"Shortest distance from {starting_v} to {ending_v} is {d[vertices.index(ending_v)]} minutes")
 
         # Backtrack from the ending vertex to the starting vertex using the "pi" array
         path = []
