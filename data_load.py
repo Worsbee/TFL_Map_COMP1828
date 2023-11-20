@@ -47,15 +47,18 @@ stations = [sublist[1] for sublist in stations_all]
 new_filtered_list_1 = [item for index, item in enumerate(filtered_list_1) if item not in stations[:index]]
 # print(new_filtered_list_1) # list without train lines
 
-# make each edge in new_filtered_list_1 bidirectional
 bidirectional_edges = []
 for edge in filtered_list_1:
     source, target, weight = edge
-    bidirectional_edges.append([source, target, weight])
-    bidirectional_edges.append([target, source, weight])
+    bidirectional_edges.append((source, target, weight))
+    bidirectional_edges.append((target, source, weight))
 
 # Remove extra spaces from all the stations
 stations_1 = [station.strip() for station in stations]
 # Normalize the station names in the bidirectional_edges list
 # Remove leading and trailing spaces from station names in the bidirectional_edges list
-bidirectional_edges = [[edge[0].strip(), edge[1].strip(), edge[2]] for edge in bidirectional_edges]
+bidirectional_edges = [(edge[0].strip(), edge[1].strip(), edge[2]) for edge in bidirectional_edges]
+#print(bidirectional_edges)
+
+task_4_vertex = [sublist[:2] for sublist in new_filtered_list_1]
+task_4_vertices = [[item.strip() for item in sublist[:2]] for sublist in new_filtered_list_1]
