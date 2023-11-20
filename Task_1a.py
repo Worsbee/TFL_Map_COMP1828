@@ -1,94 +1,53 @@
-# import the excel data in the form of a list for the stations (vertices) and a nested list for each station's adjacent station plus the time to get from one station
-# to another (the edges of the graph).
-from data_load import bidirectional_edges  # edges
-from data_load import stations_1           # vertices
-from single_source_shortest_paths import initialize_single_source, relax
-from min_heap_priority_queue import MinHeapPriorityQueue
+ importing other library code and excel data for vertices and edges
+from data_load import bidirectional_edges
+from data_load import stations_1
+# implementation of Dijkstra's algorithm library code
+from dijkstra import dijkstra
+from print_path import print_path
 import time
 start_time = time.time()
 
-# Assuming the code for print_path is available
-
-def dijkstra(G, s, end):
-    """Solve single-source shortest-paths problem with no negative-weight edges.
-
-	Arguments:
-	G -- a directed, weighted graph
-	s -- index of source vertex
-	Assumption:
-	All weights are nonnegative
-
-	Returns:
-	d -- distances from source vertex s
-	pi -- predecessors
-	"""
-    card_V = G.get_card_V()
-
-    d, pi = initialize_single_source(G, s)
-
-    queue = MinHeapPriorityQueue(lambda u: d[u])
-    for u in range(card_V):
-        queue.insert(u)
-
-    while queue.get_size() > 0:
-        u = queue.extract_min()
-        if u == end:
-            break
-        for edge in G.get_adj_list(u):
-            v = edge.get_v()
-            relax(u, v, edge.get_weight(), d, pi,
-                  lambda v: queue.decrease_key(v, d[u] + edge.get_weight()))
-
-    return d, pi  # returns the shortest distance from one station to another, plus a list storing all the predecessors of the ending station
-
-
-def print_path(pi, s, v, mapping_func):  
-    # this function takes in the predecessor list, the indexes of the starting and destination stations
-    #to print the path from one station to another (this function is used to give a list of all the stations the user passes to get to their destination)
-    if v == s:
-        return [mapping_func(s)]
-    elif pi[v] is None:
-        return None
-    else:
-        return print_path(pi, s, pi[v], mapping_func) + [mapping_func(v)]
-
 
 if __name__ == "__main__":
-    from adjacency_list_graph import AdjacencyListGraph
 
-    vertices = stations_1       # list of all the stations
-    edges = bidirectional_edges # nested list in the structure (station1, station2, time)
+	from adjacency_list_graph import AdjacencyListGraph
 
-    starting_v = input("Enter the station you are starting from: ")  # takes user travel input
-    if starting_v not in vertices:
-        print("This node does not exist")  # checks if the station entered by the user exists in the vertices list
-    ending_v = input("Enter a destination station: ")
-    if ending_v not in vertices:
-        print("This node does not exist")
+vertices = stations_1
+edges = bidirectional_edges
 
-     # create a graph storing all the connections between the stations so dijkstra's algorithm can calculate the shortes paths
-    graph1 = AdjacencyListGraph(len(vertices), True, True)
-    for edge in edges:
-        graph1.insert_edge(vertices.index(edge[0]), vertices.index(edge[1]), edge[2])  
+graph1 = AdjacencyListGraph(len(vertices), True, True)
+for edge in edges:
+	graph1.insert_edge(vertices.index(edge[0]), vertices.index(edge[1]), edge[2])
 
-    d, pi = dijkstra(graph1, vertices.index(starting_v), vertices.index(ending_v))  # run dijkstra's algorithm
+source_station = input("Enter the source station: ")
+destination_station = input("Enter the destination station: ")
 
-    if d[vertices.index(ending_v)] != float('inf'):
-        # prints shortest distance in minutes from one station to another
-        print(f"Shortest distance from {starting_v} to {ending_v} is {d[vertices.index(ending_v)]} minutes")
-        # Get the path from the starting to ending vertices
-        # run path function
-        path = print_path(pi, vertices.index(starting_v), vertices.index(ending_v), lambda i: vertices[i])
+# Check for the existence of the stations in the list of vertices
+if source_station not in vertices or destination_station not in vertices:
+	print("One or both of the stations do not exist")
+else:
+	# Use Dijkstra's algorithm to find the shortest path and distance
+	source_index = vertices.index(source_station)
+	destination_index = vertices.index(destination_station)
 
-        # Print the result
-        if path is not None:
-            result = ", ".join(map(str, path))
-            print(f"Shortest path from {starting_v} to {ending_v}: {result}")  # prints the path from one station to another
-        else:
-            print(f"No path from {starting_v} to {ending_v}")
-    else:
-        print(f"No path from {starting_v} to {ending_v}")
+	d, pi = dijkstra(graph1, source_index)
 
-    end_time = time.time()
-    elapsed_time = end_time - start_time
-    print(f"{elapsed_time} seconds")  # prints running time of the algorithm
+	if d[destination_index] != float('inf'):
+		# Print the shortest distance and path
+		print(f"Shortest distance from {source_station} to {destination_station} is {d[destination_index]} minutes")
+		# Get the path from the starting to ending vertices
+		path = print_path(pi, vertices.index(source_station), vertices.index(destination_station), lambda i: vertices[i])
+
+		# Print the result
+		if path is not None:
+			result = ", ".join(map(str, path))
+			print(f"Shortest path from {source_station} to {destination_station}: {result}")
+		else:
+			print(f"No path from {source_station} to {destination_station}")
+	else:
+		print(f"No path from {source_station} to {destination_station}")
+
+	end_time = time.time()
+	elapsed_time = end_time - start_time
+	# print the running time of the algorithm
+	print(f"{elapsed_time} seconds")
