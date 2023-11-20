@@ -60,5 +60,5 @@ stations_1 = [station.strip() for station in stations]
 bidirectional_edges = [(edge[0].strip(), edge[1].strip(), edge[2]) for edge in bidirectional_edges]
 #print(bidirectional_edges)
 
-task_4_vertex = [sublist[:2] for sublist in new_filtered_list_1]
-task_4_vertices = [[item.strip() for item in sublist[:2]] for sublist in new_filtered_list_1]
+task_4_edge = [sublist[:2] for sublist in new_filtered_list_1]
+task_4_edges = [[item.strip() for item in sublist[:2]] for sublist in new_filtered_list_1]
