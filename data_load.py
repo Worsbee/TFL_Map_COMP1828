@@ -1,5 +1,11 @@
 from openpyxl import load_workbook
 
+
+def variable_cleaner(input_variable):
+    """Removes whitespace and changes all characters to lowercase"""
+    return input_variable.replace(" ", "").lower()
+
+
 # Open the Excel file
 workbook = load_workbook('London Underground data.xlsx')
 
@@ -8,9 +14,9 @@ sheet = workbook['Sheet1']
 
 # Selecting which data to work on
 start_row = 1  # Starting row
-end_row = 757   # Ending row
+end_row = 757  # Ending row
 start_col = 1  # Column A
-end_col = 4    # Column B
+end_col = 4  # Column B
 london_underground = []
 # Iterate through the specified range of cells and remove None values from each row
 for row in sheet.iter_rows(min_row=start_row, max_row=end_row, min_col=start_col, max_col=end_col, values_only=True):
@@ -43,6 +49,8 @@ stations_all = [sublist for sublist in london_underground if len(sublist) == 2]
 # make a new list containing all the stations
 stations = [sublist[1] for sublist in stations_all]
 
+stations_clean = [variable_cleaner(station) for station in stations]
+
 # Take only the values of the filtered_dict dictionary to take only the stations, adjacent stations and the minutes
 new_filtered_list_1 = [item for index, item in enumerate(filtered_list_1) if item not in stations[:index]]
 # print(new_filtered_list_1) # list without train lines
@@ -58,7 +66,7 @@ stations_1 = [station.strip() for station in stations]
 # Normalize the station names in the bidirectional_edges list
 # Remove leading and trailing spaces from station names in the bidirectional_edges list
 bidirectional_edges = [(edge[0].strip(), edge[1].strip(), edge[2]) for edge in bidirectional_edges]
-#print(bidirectional_edges)
+# print(bidirectional_edges)
 
 task_4_edge = [sublist[:2] for sublist in new_filtered_list_1]
 task_4_edges = [[item.strip() for item in sublist[:2]] for sublist in new_filtered_list_1]
