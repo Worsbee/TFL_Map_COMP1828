@@ -1,4 +1,4 @@
- importing other library code and excel data for vertices and edges
+# importing other library code and excel data for vertices and edges
 from data_load import bidirectional_edges
 from data_load import stations_1
 # implementation of Dijkstra's algorithm library code
