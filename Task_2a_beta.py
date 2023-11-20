@@ -11,8 +11,10 @@ import time
 if __name__ == "__main__":
     from adjacency_list_graph import AdjacencyListGraph
 
-    vertices = stations_1       # list of all the stations
-    edges = bidirectional_edges # nested list in the structure (station1, station2)
+    # list of all the stations
+    vertices = stations_1
+    # nested list in the structure (station1, station2)
+    edges = bidirectional_edges
 
     starting_v = input("Enter the station you are starting from: ")
     if starting_v not in vertices:

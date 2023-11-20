@@ -37,8 +37,8 @@ def dijkstra(G, s, end):
             v = edge.get_v()
             relax(u, v, 1, d, pi,  # *NEW* Assume each edge has a weight of 1 representing a stop
                   lambda v: queue.decrease_key(v, d[u] + 1))
-
-    return d, pi  # returns the shortest distance from one station to another, plus a list storing all the predecessors of the ending station
+    # returns the shortest distance from one station to another, plus a list storing all the predecessors of the ending station
+    return d, pi
 
 def print_path(pi, s, v, mapping_func):
     # this function takes in the predecessor list, the indexes of the starting and destination stations
@@ -53,12 +53,16 @@ def print_path(pi, s, v, mapping_func):
 if __name__ == "__main__":
     from adjacency_list_graph import AdjacencyListGraph
 
-    vertices = stations_1        # list of all the stations
-    edges = bidirectional_edges  # nested list in the structure (station1, station2)
+    # list of all the stations
+    vertices = stations_1
+    # nested list in the structure (station1, station2)
+    edges = bidirectional_edges
 
-    starting_v = input("Enter the station you are starting from: ")  # takes user travel input
+    # takes user travel input
+    starting_v = input("Enter the station you are starting from: ")
     if starting_v not in vertices:
-        print("This node does not exist")  # checks if the station entered by the user exists in the vertices list
+        # checks if the station entered by the user exists in the vertices list
+        print("This node does not exist")
     ending_v = input("Enter a destination station: ")
     if ending_v not in vertices:
         print("This node does not exist")
