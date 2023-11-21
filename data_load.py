@@ -3,7 +3,21 @@ from openpyxl import load_workbook
 
 def variable_cleaner(input_variable):
     """Removes whitespace and changes all characters to lowercase"""
-    return input_variable.replace(" ", "").lower()
+    if isinstance(input_variable, str):
+        return input_variable.replace(" ", "").lower()
+
+    if isinstance(input_variable, int):
+        return int(str(input_variable).replace(" ", "").lower())
+
+
+def variable_search(cleaned_list, default_list, user_input):
+    """"""
+    try:
+        list_index = cleaned_list.index(user_input)
+        return default_list[list_index]
+
+    except ValueError:
+        pass
 
 
 # Open the Excel file
@@ -49,6 +63,7 @@ stations_all = [sublist for sublist in london_underground if len(sublist) == 2]
 # make a new list containing all the stations
 stations = [sublist[1] for sublist in stations_all]
 
+# Create a new variable with no whitespace or capitals
 stations_clean = [variable_cleaner(station) for station in stations]
 
 # Take only the values of the filtered_dict dictionary to take only the stations, adjacent stations and the minutes
@@ -66,7 +81,6 @@ stations_1 = [station.strip() for station in stations]
 # Normalize the station names in the bidirectional_edges list
 # Remove leading and trailing spaces from station names in the bidirectional_edges list
 bidirectional_edges = [(edge[0].strip(), edge[1].strip(), edge[2]) for edge in bidirectional_edges]
-# print(bidirectional_edges)
 
 task_4_edge = [sublist[:2] for sublist in new_filtered_list_1]
 task_4_edges = [[item.strip() for item in sublist[:2]] for sublist in new_filtered_list_1]
