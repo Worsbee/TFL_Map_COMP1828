@@ -8,7 +8,9 @@ Notes
 AdjacentListGraph returns a graph in the format of 'Station[n]: connecting stations (minutes)'
 for example Harrow & Wealdstone(stations[0]): 'Kenton'(stations[1]) (2 minutes) == '0: 1 (2)'
 
-Bfs returns the distance of each stations from the source.
+Bfs returns the distance of each stations from the source. Output is in original order for example
+the first element of the list is stations[0]. The numbers in the place of stations is the distance from the
+input source in stops.
 """
 
 
