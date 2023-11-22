@@ -1,6 +1,5 @@
 # importing other library code and excel data for vertices and edges
-from data_load import bidirectional_edges, stations_clean, stations_1
-from data_load import variable_cleaner, variable_search
+from data_load import *
 # implementation of Dijkstra's algorithm library code
 from dijkstra import dijkstra
 from print_path import print_path
@@ -12,8 +11,11 @@ if __name__ == "__main__":
 
 	from adjacency_list_graph import AdjacencyListGraph
 
-vertices = stations_1
+# Rename variables to improve readability
+vertices = stations
 edges = bidirectional_edges
+
+get_graph(vertices, edges)
 
 graph1 = AdjacencyListGraph(len(vertices), True, True)
 for edge in edges:
@@ -24,8 +26,8 @@ source_station = variable_cleaner(input("Enter the source station: "))
 destination_station = variable_cleaner(input("Enter the destination station: "))
 
 # Reformat stations to their correct capitalised and spaced format for printing
-source_station = variable_search(stations_clean, stations_1, source_station)
-destination_station = variable_search(stations_clean, stations_1, destination_station)
+source_station = variable_search(stations_clean, stations, source_station)
+destination_station = variable_search(stations_clean, stations, destination_station)
 
 # Check for the existence of the stations in the list of vertices
 if source_station not in vertices or destination_station not in vertices:
@@ -34,6 +36,7 @@ else:
 	# Use Dijkstra's algorithm to find the shortest path and distance
 	source_index = vertices.index(source_station)
 	destination_index = vertices.index(destination_station)
+
 
 	d, pi = dijkstra(graph1, source_index)
 

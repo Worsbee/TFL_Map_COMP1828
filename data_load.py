@@ -1,4 +1,5 @@
 from openpyxl import load_workbook
+from adjacency_list_graph import AdjacencyListGraph
 
 
 def variable_cleaner(input_variable):
@@ -19,6 +20,12 @@ def variable_search(cleaned_list, default_list, user_input):
     except ValueError:
         pass
 
+def get_graph(vertices, edges):
+    graph = AdjacencyListGraph(len(vertices), True, True)
+    for graph_edge in edges:
+        graph.insert_edge(vertices.index(graph_edge[0]), vertices.index(graph_edge[1]), graph_edge[2])
+
+    return graph
 
 # Open the Excel file
 workbook = load_workbook('London Underground data.xlsx')
@@ -62,7 +69,8 @@ for key, values_tuple in london_underground_dict.items():
 stations_all = [sublist for sublist in london_underground if len(sublist) == 2]
 # make a new list containing all the stations
 stations = [sublist[1] for sublist in stations_all]
-
+# Remove extra spaces from all the stations
+stations = [station.strip() for station in stations]
 # Create a new variable with no whitespace or capitals
 stations_clean = [variable_cleaner(station) for station in stations]
 
@@ -76,8 +84,6 @@ for edge in filtered_list_1:
     bidirectional_edges.append((source, target, weight))
     bidirectional_edges.append((target, source, weight))
 
-# Remove extra spaces from all the stations
-stations_1 = [station.strip() for station in stations]
 # Normalize the station names in the bidirectional_edges list
 # Remove leading and trailing spaces from station names in the bidirectional_edges list
 bidirectional_edges = [(edge[0].strip(), edge[1].strip(), edge[2]) for edge in bidirectional_edges]
