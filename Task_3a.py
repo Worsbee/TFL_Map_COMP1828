@@ -5,6 +5,8 @@ from data_load import variable_cleaner, variable_search
 from bellman_ford import bellman_ford
 from print_path import print_path
 from adjacency_list_graph import AdjacencyListGraph
+import time
+start_time = time.time()
 
 # Running the code
 if __name__ == "__main__":
@@ -39,7 +41,12 @@ if __name__ == "__main__":
             # If there is a path, print the result
             if path is not None:
                 result = ", ".join(map(str, path))
+                print(f"The path from {source_station} to {destination_station} is {result}")
                 print(f"The Number of stops or stations between: {source_station} and {destination_station} is "
                       f"{len(path)}")
             else:
                 print(f"No path from {source_station} to {destination_station}")
+            end_time = time.time()
+            elapsed_time = end_time - start_time
+            # print the running time of the algorithm
+            print(f"{elapsed_time} seconds")
