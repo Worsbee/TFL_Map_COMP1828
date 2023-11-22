@@ -17,8 +17,30 @@ from data_load import *
 from bfs import bfs
 
 
-def remove_station(source_station, destination_station):
-    pass
+def remove_station(edge_list, source_station, destination_station):
+    print(source_station, destination_station)
+
+    # Filter edges to including only source_station and destination_station
+    source_list = [item for item in edge_list if source_station in item]
+    destination_list = [item for item in edge_list if destination_station in item]
+
+    source_destination_list = []
+
+    # Get all entries of both stations in edges
+    for element in source_list:
+        for item in destination_list:
+            if element is item:
+                source_destination_list.append(element)
+                break
+
+    # Gets numerical index of each station pair in edges
+    source_index0 = edge_list.index(source_destination_list[0])
+    source_index1 = edge_list.index(source_destination_list[1])
+
+    for element in source_destination_list:
+        edge_list.remove(element)
+
+    return edge_list, source_index0, source_index1
 
 
 if __name__ == "__main__":
@@ -27,48 +49,27 @@ if __name__ == "__main__":
     edges = bidirectional_edges
 
     # Collects input for user
-    # rm_source_station = input("What is the source station: ")
-    # rm_destination_station = input("What is the destination station: ")
-
-    # Get all entries of both stations in edges
-    # source_destination = [element for element in source if rm_destination_station in element]
-
-    # Gets numerical index of each station pair in edges
-    # source_index0 = edges.index(source_destination[0])
-    # source_index1 = edges.index(source_destination[1])
+    rm_source_station = input("What is the source station: ")
+    rm_destination_station = input("What is the destination station: ")
 
     # Produces a graph
     graph1 = get_graph(vertices, edges)
 
     # Produces a breath first search from source and destination
-    result = bfs(graph1, 0)
+    result_before_source = bfs(graph1, vertices.index(rm_source_station))
+    result_before_destination = bfs(graph1, vertices.index(rm_destination_station))
 
-    print(result)
-
-    i = 0
-    for x in result:
-        i += 1
-
-    print(i)
-
-    """
-    result1 = bfs(graph1, destination_index)
-
-    remove_station(source, destination)
+    updated_edges, index0, index1 = remove_station(edges, rm_source_station, rm_destination_station)
 
     # Produces a graph
-    graph2 = (get_graph(vertices, edges))
+    graph2 = (get_graph(vertices, updated_edges))
 
     # Produces a breath first search from source and destination
-    rm_result = bfs(graph1, source_index)
-    rm_result1 = bfs(graph1, destination_index)
+    result_after_source = bfs(graph2, vertices.index(rm_source_station))
+    result_after_destination = bfs(graph2, vertices.index(rm_destination_station))
 
- 
-    print(edges)
-
-    print(result)
-    print(rm_result)
-
-    print(result1)
-    print(rm_result1)
-"""
+    # Print the results
+    print(f"Source station before change: \n {result_before_source}")
+    print(f"Destination station before change: \n {result_before_source}")
+    print(f"Source station after change: \n {result_after_source}")
+    print(f"Destination station after change: \n {result_after_destination}")
