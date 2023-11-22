@@ -37,7 +37,6 @@ else:
 	source_index = vertices.index(source_station)
 	destination_index = vertices.index(destination_station)
 
-
 	d, pi = dijkstra(graph1, source_index)
 
 	if d[destination_index] != float('inf'):

@@ -1,5 +1,5 @@
 # importing the Excel data in the form of a list of vertices and a nested list of edges
-from data_load import bidirectional_edges, stations_clean, stations_1
+from data_load import bidirectional_edges, stations_clean, stations
 from data_load import variable_cleaner, variable_search
 # importing the Bellman Ford library code, print_path and AdjacencyListGraph from adjacency_list_graph
 from bellman_ford import bellman_ford
@@ -9,7 +9,7 @@ from adjacency_list_graph import AdjacencyListGraph
 # Running the code
 if __name__ == "__main__":
     # assign the vertices and vertices using the imported Excel data
-    vertices = stations_1
+    vertices = stations
     edges = bidirectional_edges
 
     # Create the Graph
@@ -23,8 +23,8 @@ if __name__ == "__main__":
     destination_station = variable_cleaner(input("Enter the destination station: "))
 
     # Reformat stations to their correct capitalised and spaced format for printing
-    source_station = variable_search(stations_clean, stations_1, source_station)
-    destination_station = variable_search(stations_clean, stations_1, destination_station)
+    source_station = variable_search(stations_clean, stations, source_station)
+    destination_station = variable_search(stations_clean, stations, destination_station)
 
     # Check for the existence of the stations in the list of vertices
     if source_station not in vertices or destination_station not in vertices:

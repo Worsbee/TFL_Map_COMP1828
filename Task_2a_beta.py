@@ -1,7 +1,7 @@
 # import the excel data in the form of a list for the stations (vertices) and a nested list for each station's adjacent station
 # (the edges of the graph).
 from data_load import bidirectional_edges  # edges
-from data_load import stations_1           # vertices
+from data_load import stations           # vertices
 from single_source_shortest_paths import initialize_single_source, relax
 from min_heap_priority_queue import MinHeapPriorityQueue
 import time
@@ -12,7 +12,7 @@ if __name__ == "__main__":
     from adjacency_list_graph import AdjacencyListGraph
 
     # list of all the stations
-    vertices = stations_1
+    vertices = stations
     # nested list in the structure (station1, station2)
     edges = bidirectional_edges
 
