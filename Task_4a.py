@@ -58,48 +58,55 @@ def viability_test(rbs, rbd, ras, rad):
 
     # Rejects any changes which increase the number of impossible stations
     if result_before is not result_after:
-        message = "Shut down is not possible as some stations become inaccessible"
+        message = "Not feasible"
+
+    else:
+        message = "Feasible"
 
     return message
 
-if __name__ == "__main__":
+def check_station(source_station, destination_station):
     # Rename variables to improve readability
     vertices = stations
     edges = bidirectional_edges
-
-    # Collects input for user
-    rm_source_station = input("What is the source station: ")
-    rm_destination_station = input("What is the destination station: ")
 
     # Produces a graph
     graph1 = get_graph(vertices, edges)
 
     try:
         # Produces a breath first search from source and destination
-        result_before_source = bfs(graph1, vertices.index(rm_source_station))
-        result_before_destination = bfs(graph1, vertices.index(rm_destination_station))
+        result_before_source = bfs(graph1, vertices.index(source_station))
+        result_before_destination = bfs(graph1, vertices.index(destination_station))
 
     except ValueError:
         print("One or both stations are not recognised")
         exit()
 
-    updated_edges, index0, index1 = remove_station(edges, rm_source_station, rm_destination_station)
+    updated_edges, index0, index1 = remove_station(edges, source_station, destination_station)
 
     # Produces a graph
     graph2 = (get_graph(vertices, updated_edges))
 
     # Produces a breath first search from source and destination
-    result_after_source = bfs(graph2, vertices.index(rm_source_station))
-    result_after_destination = bfs(graph2, vertices.index(rm_destination_station))
+    result_after_source = bfs(graph2, vertices.index(source_station))
+    result_after_destination = bfs(graph2, vertices.index(destination_station))
 
     feasible = viability_test(result_before_source, result_before_destination, result_after_source, result_after_destination)
 
     # Print the results
-    print(f"Results for closure between: {rm_source_station} -- {rm_destination_station}")
-    print(feasible)
+    print(f"{source_station} -- {destination_station} : {feasible}")
+
+if __name__ == "__main__":
+
+    x = get_graph(stations, bidirectional_edges)
+    print(x.find_edge(1, 1))
+    print(x)
 
 
-    print(f"Source station before change: {result_before_source}")
-    print(f"Destination station before change: {result_before_source}")
-    print(f"Source station after change: {result_after_source}")
-    print(f"Destination station after change: {result_after_destination}")
+
+    for station0 in stations:
+        for station1 in stations:
+            if station0 is station1:
+                break
+            else:
+                check_station(station0, station1)
