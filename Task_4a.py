@@ -19,32 +19,15 @@ from bfs import bfs
 
 def remove_station(edge_list, source_station, destination_station):
     """Removes the station connection from the edges list"""
-    # Filter edges to including only source_station and destination_station
-    source_list = [item for item in edge_list if source_station in item]
-    destination_list = [item for item in edge_list if destination_station in item]
+    # Finds common connections between source and destination stations
+    common_elements = [element for element in edge_list if source_station in element and destination_station in element]
 
-    source_destination_list = []
-
-    # Get all entries of both stations in edges
-    for element in source_list:
-        for item in destination_list:
-            if element is item:
-                source_destination_list.append(element)
-                break
-
-    try:
-        # Gets numerical index of each station pair in edges
-        source_index0 = edge_list.index(source_destination_list[0])
-        source_index1 = edge_list.index(source_destination_list[1])
-
-    except IndexError:
-        print("The stations list are not adjacent on any line")
-        exit()
-
-    for element in source_destination_list:
+    # Removes connections between the two stations
+    for element in common_elements:
         edge_list.remove(element)
 
-    return edge_list, source_index0, source_index1
+    return edge_list
+
 
 def viability_test(rbs, rbd, ras, rad):
     """
@@ -65,48 +48,64 @@ def viability_test(rbs, rbd, ras, rad):
 
     return message
 
+
 def check_station(source_station, destination_station):
     # Rename variables to improve readability
     vertices = stations
     edges = bidirectional_edges
 
+    source_index = vertices.index(source_station)
+    destination_index = vertices.index(destination_station)
+
     # Produces a graph
-    graph1 = get_graph(vertices, edges)
+    graph2 = get_graph(vertices, edges)
 
     try:
         # Produces a breath first search from source and destination
-        result_before_source = bfs(graph1, vertices.index(source_station))
-        result_before_destination = bfs(graph1, vertices.index(destination_station))
+        result_before_source = bfs(graph2, source_index)
+        result_before_destination = bfs(graph2, destination_index)
 
     except ValueError:
         print("One or both stations are not recognised")
-        exit()
 
-    updated_edges, index0, index1 = remove_station(edges, source_station, destination_station)
+    updated_edges = remove_station(edges, source_station, destination_station)
 
     # Produces a graph
-    graph2 = (get_graph(vertices, updated_edges))
+    graph2 = get_graph(vertices, updated_edges)
 
     # Produces a breath first search from source and destination
-    result_after_source = bfs(graph2, vertices.index(source_station))
-    result_after_destination = bfs(graph2, vertices.index(destination_station))
+    result_after_source = bfs(graph2, source_index)
+    result_after_destination = bfs(graph2, destination_index)
 
-    feasible = viability_test(result_before_source, result_before_destination, result_after_source, result_after_destination)
+    feasible = viability_test(result_before_source, result_before_destination, result_after_source,
+                              result_after_destination)
 
     # Print the results
     print(f"{source_station} -- {destination_station} : {feasible}")
 
+
 if __name__ == "__main__":
 
-    x = get_graph(stations, bidirectional_edges)
-    print(x.find_edge(1, 1))
-    print(x)
-
-
+    graph1 = get_graph(stations, bidirectional_edges)
 
     for station0 in stations:
-        for station1 in stations:
-            if station0 is station1:
-                break
+        station_occurrences = [index for index, item in enumerate(stations)
+                               if item == station0]
+
+        if station0 != stations[0] and station0 != stations[-1]:
+            adjacent_stations = {item + offset for item in
+                                 station_occurrences for offset in [-1, 0, 1]}
+        elif station0 == stations[0]:
+            adjacent_stations = {item + offset for item in
+                                 station_occurrences for offset in [0, 1]}
+        elif station0 == stations[-1]:
+            adjacent_stations = {item + offset for item in
+                                station_occurrences for offset in [-1, 0]}
+
+        for station1 in adjacent_stations:
+
+            if stations[station1] is station0:
+                pass
             else:
-                check_station(station0, station1)
+                check_station(station0, stations[station1])
+        stations.remove(station0)

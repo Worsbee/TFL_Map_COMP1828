@@ -20,12 +20,14 @@ def variable_search(cleaned_list, default_list, user_input):
     except ValueError:
         pass
 
+
 def get_graph(vertices, edges):
     graph = AdjacencyListGraph(len(vertices), True, True)
     for graph_edge in edges:
         graph.insert_edge(vertices.index(graph_edge[0]), vertices.index(graph_edge[1]), graph_edge[2])
 
     return graph
+
 
 # Open the Excel file
 workbook = load_workbook('London Underground data.xlsx')
