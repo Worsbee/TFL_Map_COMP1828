@@ -72,40 +72,62 @@ def check_station(source_station, destination_station):
     # Print the results
     print(f"{source_station} -- {destination_station} : {feasible}")
 
-    return feasible
 
-
-if __name__ == "__main__":
+def task_4a(stations, bidrectional_edges):
 
     graph1 = get_graph(stations, bidirectional_edges)
     station_checker = []
     adjacent_stations_text = []
 
     for station0 in set(stations):
+
+        # Find where the station appears in stations
         station_occurrences = [index for index, item in enumerate(stations)
                                if item == station0]
 
+        # If the station is not the first or last station on a line find the station before and after it
         if station0 != stations[0] and station0 != stations[-1]:
+            # Find station adjacent stations
             adjacent_stations = {item + offset for item in
                                  station_occurrences for offset in [-1, 0, 1]}
+
+        # If the station is the first station on a line do not check for stations before it
         elif station0 == stations[0]:
+            # Find station adjacent stations
             adjacent_stations = {item + offset for item in
                                  station_occurrences for offset in [0, 1]}
+
+        # If the station is the last station do not check the station after it
         elif station0 == stations[-1]:
+
+            # Find station adjacent stations
             adjacent_stations = {item + offset for item in
                                 station_occurrences for offset in [-1, 0]}
 
         adjacent_stations_text = []
 
+        # Prevents duplicate connections on different lines
         for item in adjacent_stations:
             if stations[item] not in adjacent_stations_text:
                 adjacent_stations_text.append(stations[item])
 
+        # Iterate through all adjacent stations
         for station1 in adjacent_stations_text:
+
+            # If the stations are the same skip
             if station1 is station0:
                 pass
+
+            # If the station pair has already been calculated skip
             elif station1 in station_checker:
                 pass
+
+            # Else check station feasibility
             else:
-                feasible = check_station(station0, station1)
+                check_station(station0, station1)
+
+        # Once a station has been checked add station to checker list
         station_checker.append(station0)
+
+if __name__ == "__main__":
+    task_4a(stations, bidirectional_edges)
