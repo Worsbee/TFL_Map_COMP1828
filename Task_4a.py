@@ -2,17 +2,6 @@
 Description: Finding stations to remove without heavily impacting feasibility
 """
 
-"""
-Notes
-
-AdjacentListGraph returns a graph in the format of 'Station[n]: connecting stations (minutes)'
-for example Harrow & Wealdstone(stations[0]): 'Kenton'(stations[1]) (2 minutes) == '0: 1 (2)'
-
-Bfs returns the distance of each stations from the source. Output is in original order for example
-the first element of the list is stations[0]. The numbers in the place of stations is the distance from the
-input source in stops.
-"""
-
 from data_load import *
 from bfs import bfs
 
@@ -83,12 +72,16 @@ def check_station(source_station, destination_station):
     # Print the results
     print(f"{source_station} -- {destination_station} : {feasible}")
 
+    return feasible
+
 
 if __name__ == "__main__":
 
     graph1 = get_graph(stations, bidirectional_edges)
+    station_checker = []
+    adjacent_stations_text = []
 
-    for station0 in stations:
+    for station0 in set(stations):
         station_occurrences = [index for index, item in enumerate(stations)
                                if item == station0]
 
@@ -102,10 +95,17 @@ if __name__ == "__main__":
             adjacent_stations = {item + offset for item in
                                 station_occurrences for offset in [-1, 0]}
 
-        for station1 in adjacent_stations:
+        adjacent_stations_text = []
 
-            if stations[station1] is station0:
+        for item in adjacent_stations:
+            if stations[item] not in adjacent_stations_text:
+                adjacent_stations_text.append(stations[item])
+
+        for station1 in adjacent_stations_text:
+            if station1 is station0:
+                pass
+            elif station1 in station_checker:
                 pass
             else:
-                check_station(station0, stations[station1])
-        stations.remove(station0)
+                feasible = check_station(station0, station1)
+        station_checker.append(station0)
