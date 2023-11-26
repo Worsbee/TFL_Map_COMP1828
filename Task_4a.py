@@ -4,6 +4,7 @@ Description: Finding stations to remove without heavily impacting feasibility
 
 from data_load import *
 from bfs import bfs
+from Task_3a import task_3a
 
 
 def remove_station(edge_list, source_station, destination_station):
@@ -38,7 +39,7 @@ def viability_test(rbs, rbd, ras, rad):
     return message
 
 
-def check_station(source_station, destination_station):
+def check_station(source_station, destination_station, task_4b_bool):
     # Rename variables to improve readability
     vertices = stations
     edges = bidirectional_edges
@@ -69,11 +70,20 @@ def check_station(source_station, destination_station):
     feasible = viability_test(result_before_source, result_before_destination, result_after_source,
                               result_after_destination)
 
-    # Print the results
-    print(f"{source_station} -- {destination_station} : {feasible}")
+    # If called from task 4b and the station is feasible print more information
+    if task_4b_bool is True and str(feasible) == "Feasible":
+        task_3a(variable_cleaner(source_station), variable_cleaner(destination_station),
+                stations, updated_edges)
+        ##########################################
+        #
+        # IMPLEMENT FUNCTION CALL FOR HISTOGRAM HERE
+        #
+        ##########################################
+
+    print(f"{source_station} -- {destination_station}: {feasible}")
 
 
-def task_4a(stations, bidrectional_edges):
+def task_4a(stations, bidrectional_edges, task_4b_bool):
 
     graph1 = get_graph(stations, bidirectional_edges)
     station_checker = []
@@ -124,10 +134,10 @@ def task_4a(stations, bidrectional_edges):
 
             # Else check station feasibility
             else:
-                check_station(station0, station1)
+                check_station(station0, station1, task_4b_bool)
 
         # Once a station has been checked add station to checker list
         station_checker.append(station0)
 
 if __name__ == "__main__":
-    task_4a(stations, bidirectional_edges)
+    task_4a(stations, bidirectional_edges, False)

@@ -9,20 +9,11 @@ import time
 start_time = time.time()
 
 # Running the code
-if __name__ == "__main__":
-    # assign the vertices and vertices using the imported Excel data
-    vertices = stations
-    edges = bidirectional_edges
-
+def task_3a(source_station, destination_station, vertices, edges):
     # Create the Graph
     graph1 = AdjacencyListGraph(len(vertices), True, True)
     for edge in edges:
         graph1.insert_edge(vertices.index(edge[0]), vertices.index(edge[1]), edge[2])
-
-    # prompt the user for a starting and destination station
-    # Variable cleaner removes spaces and upper case letters
-    source_station = variable_cleaner(input("Enter the source station: "))
-    destination_station = variable_cleaner(input("Enter the destination station: "))
 
     # Reformat stations to their correct capitalised and spaced format for printing
     source_station = variable_search(stations_clean, stations, source_station)
@@ -50,3 +41,11 @@ if __name__ == "__main__":
             elapsed_time = end_time - start_time
             # print the running time of the algorithm
             print(f"{elapsed_time} seconds")
+
+if __name__ == "__main__":
+    # prompt the user for a starting and destination station
+    # Variable cleaner removes spaces and upper case letters
+    source_station = variable_cleaner(input("Enter the source station: "))
+    destination_station = variable_cleaner(input("Enter the destination station: "))
+
+    task_3a(source_station, destination_station, stations, bidirectional_edges)
