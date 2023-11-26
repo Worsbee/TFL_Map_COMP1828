@@ -70,6 +70,8 @@ def check_station(source_station, destination_station, task_4b_bool):
     feasible = viability_test(result_before_source, result_before_destination, result_after_source,
                               result_after_destination)
 
+    print(f"{source_station} -- {destination_station}: {feasible}")
+
     # If called from task 4b and the station is feasible print more information
     if task_4b_bool is True and str(feasible) == "Feasible":
         task_3a(variable_cleaner(source_station), variable_cleaner(destination_station),
@@ -79,8 +81,6 @@ def check_station(source_station, destination_station, task_4b_bool):
         # IMPLEMENT FUNCTION CALL FOR HISTOGRAM HERE
         #
         ##########################################
-
-    print(f"{source_station} -- {destination_station}: {feasible}")
 
 
 def task_4a(stations, bidrectional_edges, task_4b_bool):
