@@ -5,6 +5,7 @@ Description: Finding stations to remove without heavily impacting feasibility
 from data_load import *
 from bfs import bfs
 from Task_3a import task_3a
+from Task_1b import task_1b
 
 
 def remove_station(edge_list, source_station, destination_station):
@@ -76,11 +77,7 @@ def check_station(source_station, destination_station, task_4b_bool):
     if task_4b_bool is True and str(feasible) == "Feasible":
         task_3a(variable_cleaner(source_station), variable_cleaner(destination_station),
                 stations, updated_edges)
-        ##########################################
-        #
-        # IMPLEMENT FUNCTION CALL FOR HISTOGRAM HERE
-        #
-        ##########################################
+        task_1b(updated_edges)
 
 
 def task_4a(stations, bidrectional_edges, task_4b_bool):
